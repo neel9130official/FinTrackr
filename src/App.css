@@ -73,12 +73,19 @@ h1 {
 }
 
 /* ===== MAIN CONTAINER ===== */
-.app-container {
+/* .app-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 25px 40px;
+} */
+ .app-container {
+  width: 100%;
+  max-width: none;   /* remove the box limit */
+  margin: 0;
+  padding: 40px 60px;
 }
+
 
 /* ===== SUMMARY ===== */
 .summary-container {
