@@ -49,8 +49,8 @@ function App() {
   // 🎨 Chart colors
   const COLORS = [
     "#FF6B6B", // red
-    "#FFD93D", // yellow
     "#6BCB77", // green
+    "#FFD93D", // yellow
     "#4D96FF", // blue
     "#B983FF", // purple
     "#FF8C00", // orange
