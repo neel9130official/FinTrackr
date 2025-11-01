@@ -36,39 +36,57 @@ function App() {
   const [month, setMonth] = useState("All");
   const [date, setDate] = useState("");
 
-  const categories = ["Food", "Rent", "Travel", "Bills", "Shopping", "Salary", "Other"];
+  const categories = [
+    "Food",
+    "Rent",
+    "Travel",
+    "Bills",
+    "Shopping",
+    "Salary",
+    "Other",
+  ];
+
+  // 🎨 Chart colors
+  const COLORS = [
+    "#FF6B6B", // red
+    "#FFD93D", // yellow
+    "#6BCB77", // green
+    "#4D96FF", // blue
+    "#B983FF", // purple
+    "#FF8C00", // orange
+    "#00BFFF", // sky blue
+    "#E96479", // pink
+    "#845EC2", // violet
+    "#0081CF", // navy
+  ];
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("mm_theme", theme);
   }, [theme]);
 
-  // useEffect(() => {
-  //   const saved = JSON.parse(localStorage.getItem("mm_transactions") || "[]");
-  //   if (saved.length) setTransactions(saved);
-  // }, []);
   useEffect(() => {
-  const saved = JSON.parse(localStorage.getItem("mm_transactions") || "[]");
-  if (saved.length) {
-    setTransactions(saved);
-  } else {
-    const demoData = [
-      { id: 1, amount: 75000, category: "Salary", type: "Income", date: "2025-10-25" },
-      { id: 2, amount: 15000, category: "Rent", type: "Expense", date: "2025-10-26" },
-      { id: 3, amount: 1250, category: "Food", type: "Expense", date: "2025-10-27" },
-      { id: 4, amount: 600, category: "Travel", type: "Expense", date: "2025-10-28" },
-      { id: 5, amount: 2800, category: "Shopping", type: "Expense", date: "2025-10-29" },
-      { id: 6, amount: 2200, category: "Bills", type: "Expense", date: "2025-10-30" },
-      { id: 7, amount: 12000, category: "Freelancing", type: "Income", date: "2025-10-31" },
-      { id: 8, amount: 5000, category: "Investment", type: "Expense", date: "2025-11-01" },
-      { id: 9, amount: 750, category: "Food", type: "Expense", date: "2025-11-02" },
-      { id: 10, amount: 10000, category: "Salary Bonus", type: "Income", date: "2025-11-03" },
-    ];
-    setTransactions(demoData);
-    localStorage.setItem("mm_transactions", JSON.stringify(demoData));
-  }
-}, []);
-
+    const saved = JSON.parse(localStorage.getItem("mm_transactions") || "[]");
+    if (saved.length) {
+      setTransactions(saved);
+    } else {
+      // 💰 Demo data
+      const demoData = [
+        { id: 1, amount: 75000, category: "Salary", type: "Income", date: "2025-10-25" },
+        { id: 2, amount: 15000, category: "Rent", type: "Expense", date: "2025-10-26" },
+        { id: 3, amount: 1250, category: "Food", type: "Expense", date: "2025-10-27" },
+        { id: 4, amount: 600, category: "Travel", type: "Expense", date: "2025-10-28" },
+        { id: 5, amount: 2800, category: "Shopping", type: "Expense", date: "2025-10-29" },
+        { id: 6, amount: 2200, category: "Bills", type: "Expense", date: "2025-10-30" },
+        { id: 7, amount: 12000, category: "Freelancing", type: "Income", date: "2025-10-31" },
+        { id: 8, amount: 5000, category: "Investment", type: "Expense", date: "2025-11-01" },
+        { id: 9, amount: 750, category: "Food", type: "Expense", date: "2025-11-02" },
+        { id: 10, amount: 10000, category: "Salary Bonus", type: "Income", date: "2025-11-03" },
+      ];
+      setTransactions(demoData);
+      localStorage.setItem("mm_transactions", JSON.stringify(demoData));
+    }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("mm_transactions", JSON.stringify(transactions));
@@ -97,7 +115,9 @@ function App() {
   const filteredTransactions =
     month === "All"
       ? transactions
-      : transactions.filter((t) => new Date(t.date).getMonth() + 1 === parseInt(month));
+      : transactions.filter(
+          (t) => new Date(t.date).getMonth() + 1 === parseInt(month)
+        );
 
   const income = filteredTransactions
     .filter((t) => t.type === "Income")
@@ -109,6 +129,7 @@ function App() {
 
   const balance = income - expense;
 
+  // Chart data setup
   const categoryTotals = categories.map((cat) =>
     filteredTransactions
       .filter((t) => t.category === cat && t.type === "Expense")
@@ -121,10 +142,26 @@ function App() {
       {
         label: "Expenses by Category",
         data: categoryTotals,
-        backgroundColor: "#00c2ff",
-        borderColor: "#00ff9c",
+        backgroundColor: COLORS,
+        borderColor: "#ffffff",
+        borderWidth: 1,
       },
     ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { display: true, labels: { color: theme === "dark" ? "#fff" : "#000" } },
+    },
+    scales: {
+      x: { ticks: { color: theme === "dark" ? "#fff" : "#000" } },
+      y: { ticks: { color: theme === "dark" ? "#fff" : "#000" } },
+    },
+    animation: {
+      duration: 1500,
+      easing: "easeInOutQuart",
+    },
   };
 
   const toggleTheme = () => {
@@ -133,7 +170,7 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* Header and theme toggle */}
+      {/* Header */}
       <div className="header">
         <h1>💠 FinTrackr</h1>
         <button className="theme-toggle-btn" onClick={toggleTheme}>
@@ -219,15 +256,15 @@ function App() {
       <div className="charts-wrapper">
         <div className="chart-box">
           <h3>Bar Chart</h3>
-          <Bar data={chartData} />
+          <Bar data={chartData} options={chartOptions} />
         </div>
         <div className="chart-box">
           <h3>Line Chart</h3>
-          <Line data={chartData} />
+          <Line data={chartData} options={chartOptions} />
         </div>
         <div className="chart-box">
           <h3>Pie Chart</h3>
-          <Pie data={chartData} />
+          <Pie data={chartData} options={chartOptions} />
         </div>
       </div>
 
