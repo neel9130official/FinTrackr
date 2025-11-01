@@ -43,10 +43,32 @@ function App() {
     localStorage.setItem("mm_theme", theme);
   }, [theme]);
 
+  // useEffect(() => {
+  //   const saved = JSON.parse(localStorage.getItem("mm_transactions") || "[]");
+  //   if (saved.length) setTransactions(saved);
+  // }, []);
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("mm_transactions") || "[]");
-    if (saved.length) setTransactions(saved);
-  }, []);
+  const saved = JSON.parse(localStorage.getItem("mm_transactions") || "[]");
+  if (saved.length) {
+    setTransactions(saved);
+  } else {
+    const demoData = [
+      { id: 1, amount: 75000, category: "Salary", type: "Income", date: "2025-10-25" },
+      { id: 2, amount: 15000, category: "Rent", type: "Expense", date: "2025-10-26" },
+      { id: 3, amount: 1250, category: "Food", type: "Expense", date: "2025-10-27" },
+      { id: 4, amount: 600, category: "Travel", type: "Expense", date: "2025-10-28" },
+      { id: 5, amount: 2800, category: "Shopping", type: "Expense", date: "2025-10-29" },
+      { id: 6, amount: 2200, category: "Bills", type: "Expense", date: "2025-10-30" },
+      { id: 7, amount: 12000, category: "Freelancing", type: "Income", date: "2025-10-31" },
+      { id: 8, amount: 5000, category: "Investment", type: "Expense", date: "2025-11-01" },
+      { id: 9, amount: 750, category: "Food", type: "Expense", date: "2025-11-02" },
+      { id: 10, amount: 10000, category: "Salary Bonus", type: "Income", date: "2025-11-03" },
+    ];
+    setTransactions(demoData);
+    localStorage.setItem("mm_transactions", JSON.stringify(demoData));
+  }
+}, []);
+
 
   useEffect(() => {
     localStorage.setItem("mm_transactions", JSON.stringify(transactions));
